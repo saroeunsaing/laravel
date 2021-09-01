@@ -21,7 +21,7 @@ phases:
     - echo generating app key
     - php artisan key:generate
     - echo Building the Docker image...
-    - docker build -t laravel:latest .
+    - docker build -t laravel .
     - docker tag laravel:latest 220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel:latest
  post_build:
     commands:
