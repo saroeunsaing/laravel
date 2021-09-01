@@ -22,11 +22,12 @@ phases:
     - echo generating app key
     - php artisan key:generate
     - echo Building the Docker image...
-    - docker build -t $REPOSITORY_I:latest .
+    - docker build -t laravel:latest .
     - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       #- docker image ls -a
-      - docker push $REPOSITORY_URI:$IMAGE_TAG 
+      #- docker push $REPOSITORY_URI:$IMAGE_TAG 
+      - docker push 220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel:latest
