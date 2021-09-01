@@ -8,12 +8,10 @@ phases:
     commands:
     - echo Logging in to Amazon ECR....
     - aws --version
-    
     # login to Elastic container registry
-    # login to Elastic container registry
-    - eval $(aws ecr get-login --region us-east-2 --no-include-email | sed 's|https://||')
-    - REPOSITORY_URI=220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel
-    - IMAGE_TAG=1.0
+    - eval $(aws ecr get-login --region us-east-1 --no-include-email | sed 's|https://||')
+    - REPOSITORY_URI=aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 220394008374.dkr.ecr.us-east-2.amazonaws.com
+    - IMAGE_TAG=<YOUR IMAGE TAG HERE>
   build:
     commands:
     - echo Build started on `date`
@@ -24,9 +22,7 @@ phases:
     - echo generating app key
     - php artisan key:generate
     - echo Building the Docker image...
-    #- docker build -t $REPOSITORY_URI:latest .
-    
-    - docker build -t laravel .
+    - docker build -t $REPOSITORY_URI:latest .
     - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
