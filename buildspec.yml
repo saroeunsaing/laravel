@@ -1,5 +1,3 @@
-version: 0.2
-
 phases:
   install: 
     runtime-versions:
@@ -7,10 +5,11 @@ phases:
   pre_build: # commands to be run before build
     commands:
     - echo Logging in to Amazon ECR....
-    - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 220394008374.dkr.ecr.us-east-2.amazonaws.com
-
+    - aws --version
     # login to Elastic container registry
-   
+    - eval $(aws ecr get-login --region us-east-2 --no-include-email | sed 's|https://||')
+    - REPOSITORY_URI=220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel
+    - IMAGE_TAG=1.0
   build:
     commands:
     - echo Build started on `date`
@@ -21,11 +20,11 @@ phases:
     - echo generating app key
     - php artisan key:generate
     - echo Building the Docker image...
-    - docker build -t laravel .
-    - docker tag laravel:latest 220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel:latest
- post_build:
+    - docker build -t $REPOSITORY_URI:latest .
+    - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
       - docker image ls -a
-      - docker push 220394008374.dkr.ecr.us-east-2.amazonaws.com/laravel:latest 
+      - docker push $REPOSITORY_URI:$IMAGE_TAG 
